@@ -1,5 +1,6 @@
 var abstractTests = require('abstract-chunk-store/tests')
 var Queued = require('./')
+var Immediate = require('immediate-chunk-store')
 var MemoryChunkStore = require('memory-chunk-store')
 var FSChunkStore = require('fs-chunk-store')
 var test = require('tape')
@@ -10,6 +11,10 @@ abstractTests(test, function (chunkLength) {
 
 abstractTests(test, function (chunkLength) {
   return new Queued(new FSChunkStore(chunkLength))
+})
+
+abstractTests(test, function (chunkLength) {
+  return new Queued(Immediate(MemoryChunkStore(chunkLength)));
 })
 
 test('get before put', function (t) {
