@@ -64,9 +64,3 @@ QueuedChunkStore.prototype.close = function (cb) {
 QueuedChunkStore.prototype.destroy = function (cb) {
   this.store.destroy(cb)
 }
-
-function nextTick (cb, err, val) {
-  process.nextTick(function () {
-    if (cb) cb(err, val)
-  })
-}
