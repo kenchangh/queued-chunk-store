@@ -3,15 +3,20 @@
   "version": "1.0.0",
   "description": "Queued .get for abstract-chunk-store compliant stores",
   "main": "index.js",
-  "scripts": {
-    "test": "ls"
-  },
   "keywords": [
     "store",
     "cache",
     "chunk",
     "abstract-chunk-store"
   ],
-  "author": "mavenave",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/feross/immediate-chunk-store.git"
+  },
+  "author": {
+    "name": "Chan Guan Hao",
+    "email": "guanhao3797@gmail.com",
+    "url": "http://mavenave.me"
+  },
   "license": "MIT"
 }
