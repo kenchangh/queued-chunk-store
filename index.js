@@ -18,28 +18,36 @@ function QueuedChunkStore (store) {
 
 QueuedChunkStore.prototype.put = function (index, buf, cb) {
   var self = this
-  self.mem[index] = buf
   self.store.put(index, buf, function (err) {
-    if (err) cb(err)
+    if (err) {
+      if (cb) cb(err)
+      return;
+    }
+    var queuedGetsAtIndex = self.queuedGets[index];
+    if (isArray(queuedGetsAtIndex)) {
+      for (var i = 0; i < queuedGetsAtIndex.length; i++) {
+        var queuedGet = queuedGetsAtIndex[i];
+        self.store.get(index, queuedGet.opts, queuedGet.cb);
+      }
+    }
 
-    for (var i = 0; i < )
+    if (cb) cb(null);
   })
 }
 
 QueuedChunkStore.prototype.get = function (index, opts, cb) {
   if (typeof opts === 'function') return this.get(index, null, opts)
 
+  var self = this
   var start = (opts && opts.offset) || 0
   var end = opts && opts.length && (start + opts.length)
 
   this.store.get(index, opts, function(err, buf) {
-    if (err) return cb(err);
-
     if (!buf) {
-      if (!isArray(this.queuedGets[index])) {
-        this.queuedGets[index] = []
+      if (!isArray(self.queuedGets[index])) {
+        self.queuedGets[index] = []
       }
-      this.queuedGets[index].push({
+      self.queuedGets[index].push({
         opts: opts,
         cb: cb,
       })

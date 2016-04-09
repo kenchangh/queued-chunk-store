@@ -18,5 +18,14 @@
     "email": "guanhao3797@gmail.com",
     "url": "http://mavenave.me"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "abstract-chunk-store": "^1.2.0",
+    "fs-chunk-store": "^1.4.0",
+    "memory-chunk-store": "^1.2.0",
+    "tape": "^4.5.1"
+  },
+  "scripts": {
+    "test": "node test"
+  }
 }
