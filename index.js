@@ -1,3 +1,4 @@
+var async = require('async')
 module.exports = QueuedChunkStore
 
 function isArray(obj) {
@@ -25,12 +26,25 @@ QueuedChunkStore.prototype.put = function (index, buf, cb) {
     }
     var queuedGetsAtIndex = self.queuedGets[index];
     if (isArray(queuedGetsAtIndex)) {
+      var callbacks = [];
       for (var i = 0; i < queuedGetsAtIndex.length; i++) {
         var queuedGet = queuedGetsAtIndex[i];
-        self.store.get(index, queuedGet.opts, queuedGet.cb);
-      }
-    }
 
+        (function(queuedGet) {
+          callbacks.push(function (callback) {
+            self.store.get(index, queuedGet.opts, function(err, buf) {
+              queuedGet.cb(err, buf)
+              callback(err, buf)
+            })
+          })
+        })(queuedGet)
+      }
+      async.parallel(callbacks, function() {
+        self.queuedGets[index] = []
+        if (cb) cb(null);
+      });
+      return;
+    }
     if (cb) cb(null);
   })
 }

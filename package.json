@@ -28,5 +28,8 @@
   },
   "scripts": {
     "test": "node test"
+  },
+  "dependencies": {
+    "async": "^2.0.0-rc.3"
   }
 }

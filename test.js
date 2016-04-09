@@ -23,16 +23,43 @@ test('get before put', function (t) {
   store.get(0, function(err, buf) {
     t.error(err)
     t.deepEqual(buf, new Buffer('0123456789'))
+    t.end()
   })
 
-  store.get(1, function(err, buf) {
+  store.put(0, new Buffer('0123456789'))
+})
+
+test('put then get', function (t) {
+  var store = new Queued(Immediate(MemoryChunkStore(10)))
+
+  store.put(0, new Buffer('0123456789'), function() {
+    store.get(0, function(err, buf) {
+      t.error(err)
+      t.deepEqual(buf, new Buffer('0123456789'))
+      t.end()
+    })
+  })
+})
+
+test('gets should be removed after put', function (t) {
+  var store = new Queued(new MemoryChunkStore(10))
+
+  store.get(0, function(err, buf) {
     t.error(err)
     t.deepEqual(buf, new Buffer('0123456789'))
   })
 
-  store.put(0, new Buffer('0123456789'))
+  store.get(0, function(err, buf) {
+    t.error(err)
+    t.deepEqual(buf, new Buffer('0123456789'))
+  })
 
-  store.put(1, new Buffer('0123456789'))
+  store.put(0, new Buffer('0123456789'), function() {
+    t.equal(store.queuedGets[0].length, 0)
 
-  t.end()
+    store.destroy(function (err) {
+      t.error(err)
+      t.end()
+    })
+  })
 })
