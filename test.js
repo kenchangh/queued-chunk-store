@@ -63,3 +63,15 @@ test('gets should be removed after put', function (t) {
     })
   })
 })
+
+test('get should work after put', function (t) {
+  var store = new Queued(new MemoryChunkStore(10))
+
+  store.put(0, new Buffer('0123456789'))
+
+  store.get(0, function(err, buf) {
+    t.error(err)
+    t.deepEqual(buf, new Buffer('0123456789'))
+    t.end()
+  })
+})
