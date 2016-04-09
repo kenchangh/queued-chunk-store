@@ -1,6 +1,6 @@
 {
   "name": "queued-chunk-store",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Queued .get for abstract-chunk-store compliant stores",
   "main": "index.js",
   "keywords": [
