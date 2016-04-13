@@ -1,4 +1,4 @@
-var async = require('async')
+var parallel = require('run-parallel')
 module.exports = QueuedChunkStore
 
 function isArray(obj) {
@@ -39,7 +39,7 @@ QueuedChunkStore.prototype.put = function (index, buf, cb) {
           })
         })(queuedGet)
       }
-      async.parallel(callbacks, function() {
+      parallel(callbacks, function() {
         self.queuedGets[index] = []
         if (cb) cb(null);
       });
